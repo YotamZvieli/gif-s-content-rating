@@ -1,18 +1,13 @@
-// backend/index.js
-
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 
-// Initialize Express app
 const app = express();
 const PORT = 5000;
 
-// Enable CORS for all origins (you can restrict this in production)
 app.use(cors());
 
-// Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/'); // Ensure this directory exists
@@ -46,10 +41,9 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Function X: Process the GIF and return a rating between 1 and 10
-// For demonstration, we'll mock this function to return a random number
 const processGif = (filePath) => {
     // TODO: Implement actual processing logic here
-    return Math.floor(Math.random() * 10) + 1;
+    return Math.floor(Math.random() * 10) + 1; // currently random rating.
 };
 
 // Define the /rate-gif endpoint
