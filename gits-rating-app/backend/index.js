@@ -56,11 +56,6 @@ app.post('/rate-gif', upload.single('gif'), (req, res) => {
         const filePath = path.join(__dirname, 'uploads', req.file.filename);
         const rating = processGif(filePath);
 
-        // delete the gif after processing.
-        fs.unlink(filePath, (err) => {
-            if (err) console.error('Error deleting file:', err);
-        });
-
         return res.json({ rating });
     } catch (error) {
         console.error('Error processing GIF:', error);
