@@ -20,3 +20,12 @@ def extract_frames(gif_path, max_frames=10):
         frames.append(np.zeros((128, 128, 3)))
     
     return np.array(frames)
+
+def frames_for_gif_to_extract(gif_path):
+  gif_duration = 0
+  with Image.open(gif_path) as img:
+    for i in range(img.n_frames):
+      img.seek(i)
+      gif_duration += img.info['duration']
+
+  return max(gif_duration // 500, 1)
