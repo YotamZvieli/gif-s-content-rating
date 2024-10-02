@@ -18,18 +18,11 @@ if __name__ == '__main__':
     test_path = "gifs/DL project - gifs/test/"
     classes = ["g", "pg", "pg-13", "r"]
     label_to_num = {"g":0, "pg":1, "pg-13":2, "r":3}
-    num_of_frames = 5
-    height = 128
-    width = 128
+    num_of_frames = 10
+    height = 90
+    width = 90
     mixed_precision.set_global_policy('mixed_float16')
-    load_from_cache = True
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        try:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-        except RuntimeError as e:
-            print(e)
+    load_from_cache = False
 
     train_labels = []
     train_features = []
@@ -59,18 +52,13 @@ if __name__ == '__main__':
 
     #create the model
     model = Sequential()
-    model.add(ConvLSTM2D(filters=8, kernel_size=(3, 3), activation='tanh', data_format="channels_last",
+    model.add(ConvLSTM2D(filters=8, kernel_size=(2, 2), activation='tanh', data_format="channels_last",
                          recurrent_dropout=0.2, return_sequences=True, input_shape=(num_of_frames, height, width, 3)))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    model.add(TimeDistributed(Dropout(0.2)))
-    model.add(ConvLSTM2D(filters=16, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    model.add(TimeDistributed(Dropout(0.2)))
-    model.add(ConvLSTM2D(filters=16, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
-    # model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    # model.add(TimeDistributed(Dropout(0.2)))
-    # model.add(ConvLSTM2D(filters=16, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
-    # model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(3, 2, 2), padding='same', data_format='channels_last'))
+    model.add(TimeDistributed(Dropout(0.1)))
+    model.add(ConvLSTM2D(filters=12, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
+    model.add(MaxPooling3D(pool_size=(3, 2, 2), padding='same', data_format='channels_last'))
+    model.add(TimeDistributed(Dropout(0.1)))
     model.add(Flatten())
     model.add(Dense(len(classes), activation="softmax"))
     model.build()

@@ -25,7 +25,7 @@ if __name__ == '__main__':
     train_features = np.array(train_features).reshape(-1, num_of_frames, height, width, 3)
     train_labels = np.array(train_labels)
 
-    model = tf.keras.models.load_model('convlstm_model___Date_Time_2024_10_02__14_25_31___Loss_0.8301429152488708___Accuracy_0.6796116232872009.h5')
+    model = tf.keras.models.load_model('convlstm_model___Date_Time_2024_10_02__15_16_21___Loss_0.9561542272567749___Accuracy_0.6666666865348816.h5')
 
     predicted = model.predict(train_features)
 
