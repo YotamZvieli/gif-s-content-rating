@@ -18,10 +18,11 @@ if __name__ == '__main__':
     test_path = "gifs/DL project - gifs/test/"
     classes = ["g", "pg", "pg-13", "r"]
     label_to_num = {"g":0, "pg":1, "pg-13":2, "r":3}
-    num_of_frames = 20
-    height = 128
-    width = 128
+    num_of_frames = 5
+    height = 256
+    width = 256
     mixed_precision.set_global_policy('mixed_float16')
+    load_from_cache = False
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         try:
@@ -32,18 +33,29 @@ if __name__ == '__main__':
 
     train_labels = []
     train_features = []
+    if not load_from_cache:
+        for c in classes:
+            for gif in glob.glob(os.path.join(train_path + c, "*.gif")):
+                frames = frames_extractor.extract_frames(gif, width, height, num_of_frames)
+                train_features.append(frames)
+                train_labels.append(label_to_num[c])
 
-    for c in classes:
-        for gif in glob.glob(os.path.join(train_path + c, "*.gif")):
-            frames = frames_extractor.extract_frames(gif, width, height, num_of_frames)
-            train_features.append(frames)
-            train_labels.append(label_to_num[c])
+        train_features = np.array(train_features).reshape(-1, num_of_frames, height, width, 3)
+        train_labels = np.array(train_labels)
 
-    train_features = np.array(train_features).reshape(-1, num_of_frames, height, width, 3)
-    train_labels = np.array(train_labels)
+        encoded_labels = to_categorical(train_labels, num_classes=len(classes))
+        features_train, features_test, labels_train, labels_test = train_test_split(train_features, encoded_labels, test_size=0.25, shuffle=True)
 
-    encoded_labels = to_categorical(train_labels, num_classes=len(classes))
-    features_train, features_test, labels_train, labels_test = train_test_split(train_features, encoded_labels, test_size=0.25, shuffle=True)
+        np.save("features_train", features_train)
+        np.save("features_test", features_test)
+        np.save("labels_train", labels_train)
+        np.save("labels_test", labels_test)
+    else:
+        features_train = np.load("features_train.npy")
+        features_test = np.load("features_test.npy")
+        labels_train = np.load("labels_train.npy")
+        labels_test = np.load("labels_test.npy")
+
 
     #create the model
     model = Sequential()
@@ -70,7 +82,7 @@ if __name__ == '__main__':
     model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=["accuracy"])
 
     # Start training the model.
-    convlstm_model_training_history = model.fit(x=features_train, y=labels_train, epochs=50, batch_size=1,
+    convlstm_model_training_history = model.fit(x=features_train, y=labels_train, epochs=50, batch_size=32,
                                                 shuffle=True, validation_split=0.2, callbacks=[early_stopping_callback])
 
     model_evaluation_history = model.evaluate(features_test, labels_test)
