@@ -10,9 +10,9 @@ if __name__ == '__main__':
     test_path = "gifs/DL project - gifs/test/"
     classes = ["g", "pg", "pg-13", "r"]
     label_to_num = {"g":0, "pg":1, "pg-13":2, "r":3}
-    num_of_frames = 10
-    height = 100
-    width = 100
+    num_of_frames = 5
+    height = 128
+    width = 128
 
     train_labels = []
     train_features = []
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     train_features = np.array(train_features).reshape(-1, num_of_frames, height, width, 3)
     train_labels = np.array(train_labels)
 
-    model = tf.keras.models.load_model('convlstm_model___Date_Time_2024_10_02__12_55_19___Loss_0.8574392795562744___Accuracy_0.6828479170799255.h5')
+    model = tf.keras.models.load_model('convlstm_model___Date_Time_2024_10_02__14_25_31___Loss_0.8301429152488708___Accuracy_0.6796116232872009.h5')
 
     predicted = model.predict(train_features)
 
@@ -37,5 +37,5 @@ if __name__ == '__main__':
         results.append(predicted[i].index(max(predicted[i])))
 
     print(results)
-    print(train_labels)
+    print(train_labels.tolist())
 
