@@ -208,9 +208,9 @@ if __name__ == '__main__':
     model.compile(loss = 'categorical_crossentropy', optimizer = 'Adam', metrics = ["accuracy"])
 
     # Create data generators
-    train_generator = DataGenerator(X_train, y_train, batch_size=16, max_frames=max_frames)
-    test_generator = DataGenerator(X_test, y_test, batch_size=16, max_frames=max_frames)
-    val_generator = DataGenerator(X_val, y_val, batch_size=16, max_frames=max_frames)
+    train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
+    test_generator = DataGenerator(X_test, y_test, batch_size=8, max_frames=max_frames)
+    val_generator = DataGenerator(X_val, y_val, batch_size=8, max_frames=max_frames)
 
     print('started training...')
     # Start training the model.
