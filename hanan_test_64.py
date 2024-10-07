@@ -210,32 +210,72 @@ if __name__ == '__main__':
     matplotlib.use('Qt5Agg')
     folder_path = r"C:\Users\yotam\OneDrive - mail.tau.ac.il\Documents\courses\ML\gif-s-content-rating\gifs\DL project - gifs\train"
 
-    print("started loading dataset...")
-    X, y = load_dataset(folder_path)
-    print("finished loading dataset...")
-    print(f'Number of gifs: {len(X)}')
+    load_from_cache = False
+    train_labels = []
+    train_features = []
+    if not load_from_cache:
+        print("started loading dataset...")
+        X, y = load_dataset(folder_path)
+        print("finished loading dataset...")
+        print(f'Number of gifs: {len(X)}')
 
-    max_frames = max(len(seq) for seq in X)
+        max_frames = max(len(seq) for seq in X)
 
-    # print("started padding...")
-    # X_padded = pad_sequences_3d(X, max_frames)
-    # print("finished padding...")
+        print('started encodeing labels...')
+        le = LabelEncoder()
+        y_encoded = le.fit_transform(y)
+        num_classes = len(le.classes_)
+        # Convert labels into one-hot-encoded vectors
+        one_hot_encoded_labels = to_categorical(y_encoded)
+        print('finished encodeing labels...')
 
-    #X_padded = X_padded.astype(np.float32) / 255.0
+        X_train, X_test, y_train, y_test = train_test_split(X, one_hot_encoded_labels,
+                                                            test_size=0.2, shuffle = True,
+                                                            random_state=SEED)
+        
+        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
-    print('started encodeing labels...')
-    le = LabelEncoder()
-    y_encoded = le.fit_transform(y)
-    num_classes = len(le.classes_)
-    # Convert labels into one-hot-encoded vectors
-    one_hot_encoded_labels = to_categorical(y_encoded)
-    print('finished encodeing labels...')
+        np.save("features_train", X_train)
+        np.save("features_test", X_test)
+        np.save("features_val", X_val)
+        np.save("labels_train", y_train)
+        np.save("labels_test", y_test)
+        np.save("labelss_val", y_val)
+    else:
+        X_train = np.load("features_train.npy")
+        X_test = np.load("features_test.npy")
+        X_val = np.load("features_val.npy")
+        y_train = np.load("labels_train.npy")
+        y_test = np.load("labels_test.npy")
+        y_val = np.load("labelss_val.npy")
 
-    X_train, X_test, y_train, y_test = train_test_split(X, one_hot_encoded_labels,
-                                                        test_size=0.2, shuffle = True,
-                                                        random_state=SEED)
+
+    # print("started loading dataset...")
+    # X, y = load_dataset(folder_path)
+    # print("finished loading dataset...")
+    # print(f'Number of gifs: {len(X)}')
+
+    # max_frames = max(len(seq) for seq in X)
+
+    # # print("started padding...")
+    # # X_padded = pad_sequences_3d(X, max_frames)
+    # # print("finished padding...")
+
+    # #X_padded = X_padded.astype(np.float32) / 255.0
+
+    # print('started encodeing labels...')
+    # le = LabelEncoder()
+    # y_encoded = le.fit_transform(y)
+    # num_classes = len(le.classes_)
+    # # Convert labels into one-hot-encoded vectors
+    # one_hot_encoded_labels = to_categorical(y_encoded)
+    # print('finished encodeing labels...')
+
+    # X_train, X_test, y_train, y_test = train_test_split(X, one_hot_encoded_labels,
+    #                                                     test_size=0.2, shuffle = True,
+    #                                                     random_state=SEED)
     
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
+    # X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
     # Create data generators
     train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
