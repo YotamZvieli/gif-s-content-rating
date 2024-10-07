@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import matplotlib
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -206,7 +207,8 @@ def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name)
     plt.legend()
 
 if __name__ == '__main__':
-    folder_path = r"C:\gif-s-content-rating\gifs\train"
+    matplotlib.use('Qt5Agg')
+    folder_path = r"C:\Users\yotam\OneDrive - mail.tau.ac.il\Documents\courses\ML\gif-s-content-rating\gifs\DL project - gifs\train"
 
     print("started loading dataset...")
     X, y = load_dataset(folder_path)
