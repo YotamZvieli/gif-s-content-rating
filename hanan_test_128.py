@@ -148,8 +148,6 @@ def create_model_2(input_shape, num_classes):
 
     model.add(Input(shape=input_shape))
 
-    model.add(TimeDistributed(Cropping2D(24)))
-
     model.add(TimeDistributed(Conv2D(48, (11, 11), strides=4, padding='same',activation = 'relu')))
     model.add(TimeDistributed(MaxPooling2D((2, 2))))
 
@@ -163,9 +161,11 @@ def create_model_2(input_shape, num_classes):
     model.add(TimeDistributed(Conv2D(128, (3, 3), padding='same',activation = 'relu')))
     model.add(TimeDistributed(MaxPooling2D((2, 2))))
 
-    model.add(Dense(512, activation = 'relu'))
-    model.add(Dense(512, activation = 'relu'))
-    model.add(Dense(256, activation = 'relu'))
+    model.add(TimeDistributed(Dense(512, activation = 'relu')))
+    model.add(TimeDistributed(Dense(512, activation = 'relu')))
+    model.add(TimeDistributed(Dense(256, activation = 'relu')))
+
+    model.add(TimeDistributed(Flatten()))
 
     model.add(Masking(mask_value=0.0))
 
@@ -238,9 +238,9 @@ if __name__ == '__main__':
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
     # Create data generators
-    train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
-    test_generator = DataGenerator(X_test, y_test, batch_size=8, max_frames=max_frames)
-    val_generator = DataGenerator(X_val, y_val, batch_size=8, max_frames=max_frames)
+    train_generator = DataGenerator(X_train, y_train, batch_size=2, max_frames=max_frames)
+    test_generator = DataGenerator(X_test, y_test, batch_size=2, max_frames=max_frames)
+    val_generator = DataGenerator(X_val, y_val, batch_size=2, max_frames=max_frames)
 
     input_shape = (max_frames, WIDTH, HEIGHT, 3)
 
@@ -384,7 +384,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_128_Cropping2D(24)' \
+    model_file_name = f'LRCN_model_byDuration_128' \
         f'_Conv2d(48,(11,11),strides=4,relu)_maxPooling(2,2)' \
         f'_Conv2d(128,(5,5),relu)_maxPooling(2,2)' \
         f'_Conv2d(192,(3,3),relu)_Conv2d(192,(3,3),relu)' \

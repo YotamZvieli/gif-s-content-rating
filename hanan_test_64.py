@@ -140,6 +140,43 @@ def create_model(input_shape, num_classes, masking):
     # Return the constructed LRCN model.
     return model
 
+def create_model_2(input_shape, num_classes):
+
+    model = Sequential()
+
+    model.add(Input(shape=input_shape))
+
+    model.add(TimeDistributed(Conv2D(24, (11, 11), strides=4, padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(TimeDistributed(Conv2D(64, (5, 5), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(TimeDistributed(Conv2D(96, (3, 3), padding='same',activation = 'relu')))
+
+    model.add(TimeDistributed(Conv2D(96, (3, 3), padding='same',activation = 'relu')))
+
+    model.add(TimeDistributed(Conv2D(64, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(TimeDistributed(Dense(144, activation = 'relu')))
+    model.add(TimeDistributed(Dense(144, activation = 'relu')))
+    model.add(TimeDistributed(Dense(72, activation = 'relu')))
+
+    model.add(TimeDistributed(Flatten()))
+
+    model.add(Masking(mask_value=0.0))
+
+    model.add(LSTM(32))
+
+    model.add(Dense(num_classes, activation = 'softmax'))
+
+    # Display the models summary.
+    model.summary()
+
+    # Return the constructed LRCN model.
+    return model
+
 def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name):
     '''
     This function will plot the metrics passed to it in a graph.
@@ -273,6 +310,45 @@ if __name__ == '__main__':
         f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
         f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
         f'_LSTM(32)_Dense(softmax)' \
+        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+
+    # Save the Model.
+    model.save(model_file_name)
+
+
+    #----------Third model-----------
+    model = create_model_2(input_shape, num_classes)
+    print('created third model')
+
+    # Create an Instance of Early Stopping Callback.
+    early_stopping_callback = EarlyStopping(monitor = 'val_loss', patience = 15, mode = 'min', restore_best_weights = True)
+
+    # Compile the model and specify loss function, optimizer and metrics to the model.
+    model.compile(loss = 'categorical_crossentropy', optimizer = 'Adam', metrics = ["accuracy"])
+
+    print('started training third model...')
+    # Start training the model.
+    training_history = model.fit(train_generator, epochs = 70, shuffle=True, validation_data=val_generator, callbacks = [early_stopping_callback])
+    print('finished training third model...')
+
+    evaluation_history = model.evaluate(test_generator, verbose=2)
+    test_loss, test_acc = evaluation_history
+    print(f"\nThird model test loss: {test_loss}")
+    print(f"\nThird model test accuracy: {test_acc}")
+
+    # Visualize the training and validation loss metrices.
+    plot_metric(training_history, 'loss', 'val_loss', 'Total Loss vs Total Validation Loss')
+
+    # Visualize the training and validation accuracy metrices.
+    plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
+
+    model_file_name = f'LRCN_model_byDuration_64' \
+        f'_Conv2d(24,(11,11),strides=4,relu)_maxPooling(2,2)' \
+        f'_Conv2d(64,(5,5),relu)_maxPooling(2,2)' \
+        f'_Conv2d(96,(3,3),relu)_Conv2d(96,(3,3),relu)' \
+        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
+        f'_Dense(144,relu)_Dense(144,relu)_Dense(72,relu)' \
+        f'_Masking_LSTM(32)_Dense(4,softmax)' \
         f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
