@@ -207,7 +207,6 @@ def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name)
     plt.legend()
 
 if __name__ == '__main__':
-    matplotlib.use('Qt5Agg')
     folder_path = r"C:\Users\yotam\OneDrive - mail.tau.ac.il\Documents\courses\ML\gif-s-content-rating\gifs\DL project - gifs\train"
 
     load_from_cache = False
@@ -225,6 +224,8 @@ if __name__ == '__main__':
         le = LabelEncoder()
         y_encoded = le.fit_transform(y)
         num_classes = len(le.classes_)
+        y_encoded = np.array(y_encoded)
+        X = np.array(X)
         # Convert labels into one-hot-encoded vectors
         one_hot_encoded_labels = to_categorical(y_encoded)
         print('finished encodeing labels...')
@@ -278,9 +279,9 @@ if __name__ == '__main__':
     # X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
     # Create data generators
-    train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
-    test_generator = DataGenerator(X_test, y_test, batch_size=8, max_frames=max_frames)
-    val_generator = DataGenerator(X_val, y_val, batch_size=8, max_frames=max_frames)
+    train_generator = DataGenerator(X_train, y_train, batch_size=32, max_frames=max_frames)
+    test_generator = DataGenerator(X_test, y_test, batch_size=32, max_frames=max_frames)
+    val_generator = DataGenerator(X_val, y_val, batch_size=32, max_frames=max_frames)
 
     input_shape = (max_frames, WIDTH, HEIGHT, 3)
 
