@@ -13,6 +13,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import to_categorical, Sequence
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.applications import ResNet50
+from keras.applications.resnet50 import preprocess_input
 
 HEIGHT = 64
 WIDTH = 64
@@ -38,9 +39,12 @@ class DataGenerator(Sequence):
         batch_gifs = []
         for frames in batch_gifs_frames:
             padded_frames = np.pad(frames, ((0, self.max_frames - len(frames)), (0, 0), (0, 0), (0, 0)), mode='constant')
-            batch_gifs.append(padded_frames)
+            new_frames = []
+            for frame in padded_frames:
+                new_frames.append(preprocess_input(frame))
+            batch_gifs.append(np.array(padded_frames))
 
-        return np.array(batch_gifs).astype(np.float32) / 255.0, batch_labels
+        return np.array(batch_gifs), batch_labels # .astype(np.float32) / 255.0, batch_labels
 
 def extract_frames(gif_path, max_frames):
     frames = []

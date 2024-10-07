@@ -100,7 +100,7 @@ def load_dataset(folder_path):
 
 #     # return np.array(padded_sequences)
 
-def create_model(input_shape, num_classes, masking, layer_addition):
+def create_model_1(input_shape, num_classes, masking, layer_addition):
 
     model = Sequential()
 
@@ -136,7 +136,42 @@ def create_model(input_shape, num_classes, masking, layer_addition):
 
     model.add(Dense(num_classes, activation = 'softmax'))
 
-    ########################################################################################################################
+    # Display the models summary.
+    model.summary()
+
+    # Return the constructed LRCN model.
+    return model
+
+def create_model_2(input_shape, num_classes):
+
+    model = Sequential()
+
+    model.add(Input(shape=input_shape))
+
+    model.add(TimeDistributed(Cropping2D(24)))
+
+    model.add(TimeDistributed(Conv2D(48, (11, 11), strides=4, padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(TimeDistributed(Conv2D(128, (5, 5), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(TimeDistributed(Conv2D(192, (3, 3), padding='same',activation = 'relu')))
+
+    model.add(TimeDistributed(Conv2D(192, (3, 3), padding='same',activation = 'relu')))
+
+    model.add(TimeDistributed(Conv2D(128, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2))))
+
+    model.add(Dense(512, activation = 'relu'))
+    model.add(Dense(512, activation = 'relu'))
+    model.add(Dense(256, activation = 'relu'))
+
+    model.add(Masking(mask_value=0.0))
+
+    model.add(LSTM(64))
+
+    model.add(Dense(num_classes, activation = 'softmax'))
 
     # Display the models summary.
     model.summary()
@@ -210,7 +245,7 @@ if __name__ == '__main__':
     input_shape = (max_frames, WIDTH, HEIGHT, 3)
 
     # ----------------First model----------------------
-    model = create_model(input_shape, num_classes, True, False)
+    model = create_model_1(input_shape, num_classes, True, False)
     print('created first model')
 
     # Create an Instance of Early Stopping Callback.
@@ -247,7 +282,7 @@ if __name__ == '__main__':
 
 
     # -------------Second model--------------
-    model = create_model(input_shape, num_classes, False, False)
+    model = create_model_1(input_shape, num_classes, False, False)
     print('created second model')
 
     # Create an Instance of Early Stopping Callback.
@@ -285,7 +320,7 @@ if __name__ == '__main__':
 
 
     #----------Third model-----------
-    model = create_model(input_shape, num_classes, True, True)
+    model = create_model_1(input_shape, num_classes, True, True)
     print('created third model')
 
     # Create an Instance of Early Stopping Callback.
@@ -316,6 +351,46 @@ if __name__ == '__main__':
         f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
         f'_Conv2d(128,(3,3),relu)_maxPooling(1,1)' \
         f'_LSTM(32)_Dense(softmax)' \
+        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+
+    # Save the Model.
+    model.save(model_file_name)
+
+
+
+    #----------Fourth model-----------
+    model = create_model_2(input_shape, num_classes)
+    print('created fourth model')
+
+    # Create an Instance of Early Stopping Callback.
+    early_stopping_callback = EarlyStopping(monitor = 'val_loss', patience = 15, mode = 'min', restore_best_weights = True)
+
+    # Compile the model and specify loss function, optimizer and metrics to the model.
+    model.compile(loss = 'categorical_crossentropy', optimizer = 'Adam', metrics = ["accuracy"])
+
+    print('started training fourth model...')
+    # Start training the model.
+    training_history = model.fit(train_generator, epochs = 70, shuffle=True, validation_data=val_generator, callbacks = [early_stopping_callback])
+    print('finished training fourth model...')
+
+    evaluation_history = model.evaluate(test_generator, verbose=2)
+    test_loss, test_acc = evaluation_history
+    print(f"\nFourth model test loss: {test_loss}")
+    print(f"\nFourth model test accuracy: {test_acc}")
+
+    # Visualize the training and validation loss metrices.
+    plot_metric(training_history, 'loss', 'val_loss', 'Total Loss vs Total Validation Loss')
+
+    # Visualize the training and validation accuracy metrices.
+    plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
+
+    model_file_name = f'LRCN_model_byDuration_128_Cropping2D(24)' \
+        f'_Conv2d(48,(11,11),strides=4,relu)_maxPooling(2,2)' \
+        f'_Conv2d(128,(5,5),relu)_maxPooling(2,2)' \
+        f'_Conv2d(192,(3,3),relu)_Conv2d(192,(3,3),relu)' \
+        f'_Conv2d(128,(3,3),relu)_maxPooling(2,2)' \
+        f'_Dense(512,relu)_Dense(512,relu)_Dense(256,relu)' \
+        f'_Masking_LSTM(64)_Dense(4,softmax)' \
         f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
