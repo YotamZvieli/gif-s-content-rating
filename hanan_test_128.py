@@ -270,12 +270,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_128_Conv2d(16,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(32,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_LSTM(32)_Dense(softmax)_Masking' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'First_LRCN_model_128__Loss_{test_loss}__Acc_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -307,12 +302,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_128_Conv2d(16,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(32,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_LSTM(32)_Dense(softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'Second_LRCN_model_128__Loss_{test_loss}__Acc_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -345,13 +335,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_128_Conv2d(16,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(32,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_Conv2d(128,(3,3),relu)_maxPooling(1,1)' \
-        f'_LSTM(32)_Dense(softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'Third_LRCN_model_128__Loss_{test_loss}__Acc_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -384,14 +368,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_128' \
-        f'_Conv2d(48,(11,11),strides=4,relu)_maxPooling(2,2)' \
-        f'_Conv2d(128,(5,5),relu)_maxPooling(2,2)' \
-        f'_Conv2d(192,(3,3),relu)_Conv2d(192,(3,3),relu)' \
-        f'_Conv2d(128,(3,3),relu)_maxPooling(2,2)' \
-        f'_Dense(512,relu)_Dense(512,relu)_Dense(256,relu)' \
-        f'_Masking_LSTM(64)_Dense(4,softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'Fourth_LRCN_model_128__Loss_{test_loss}__Acc_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)

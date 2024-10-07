@@ -268,12 +268,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_64_Conv2d(16,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(32,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_LSTM(32)_Dense(softmax)_Masking' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'First_LRCN_model_64__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -305,12 +300,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_64_Conv2d(16,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(32,(3,3),relu)_maxPooling(4,4)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)_dropout(0.25)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_LSTM(32)_Dense(softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'Second_LRCN_model_64__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -342,14 +332,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_64' \
-        f'_Conv2d(24,(11,11),strides=4,relu)_maxPooling(2,2)' \
-        f'_Conv2d(64,(5,5),relu)_maxPooling(2,2)' \
-        f'_Conv2d(96,(3,3),relu)_Conv2d(96,(3,3),relu)' \
-        f'_Conv2d(64,(3,3),relu)_maxPooling(2,2)' \
-        f'_Dense(144,relu)_Dense(144,relu)_Dense(72,relu)' \
-        f'_Masking_LSTM(32)_Dense(4,softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'Third_LRCN_model_64__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)

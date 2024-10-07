@@ -188,10 +188,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_64_ResNet50_Freeze' \
-        f'_GlobalAveragePooling2D_LSTM(256, return_sequences=True)' \
-        f'_LSTM(128)_Dense(softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'LRCN_model_64_ResNet50_Freeze__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
@@ -223,10 +220,7 @@ if __name__ == '__main__':
     # Visualize the training and validation accuracy metrices.
     plot_metric(training_history, 'accuracy', 'val_accuracy', 'Total Accuracy vs Total Validation Accuracy')
 
-    model_file_name = f'LRCN_model_byDuration_64_ResNet50_Trainable' \
-        f'_GlobalAveragePooling2D_LSTM(256, return_sequences=True)' \
-        f'_LSTM(128)_Dense(softmax)' \
-        f'__Loss_{test_loss}__Accuracy_{test_acc}.h5'
+    model_file_name = f'LRCN_model_64_ResNet50_Trainable__Loss_{test_loss}__Accuracy_{test_acc}.h5'
 
     # Save the Model.
     model.save(model_file_name)
