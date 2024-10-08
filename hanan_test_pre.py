@@ -81,7 +81,7 @@ def load_dataset(folder_path):
                 gif_sequences.append(frames)
                 ratings.append(rating_folder_name)
 
-    return gif_sequences, np.array(ratings)
+    return np.array(gif_sequences, dtype='object'), np.array(ratings)
 
 def create_model(input_shape, num_classes, base_model_trainable):
 
@@ -100,6 +100,8 @@ def create_model(input_shape, num_classes, base_model_trainable):
     outputs = Dense(num_classes, activation='softmax')(x)
     
     model = tf.keras.Model(inputs, outputs)
+
+    model.summary()
     
     return model
 
@@ -134,26 +136,48 @@ def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name)
 if __name__ == '__main__':
     folder_path = r"C:\gif-s-content-rating\gifs\train"
 
-    print("started loading dataset...")
-    X, y = load_dataset(folder_path)
-    print("finished loading dataset...")
-    print(f'Number of gifs: {len(X)}')
+    if not all(cache_name in os.listdir() for cache_name in ['features_train_pre.npy', 
+                                                             'features_test_pre.npy', 
+                                                             'features_val_pre.npy', 
+                                                             'labels_train_pre.npy', 
+                                                             'labels_test_pre.npy', 
+                                                             'labels_val_pre.npy']):
+        print("started loading dataset...")
+        X, y = load_dataset(folder_path)
+        print("finished loading dataset...")
+        print(f'Number of gifs: {len(X)}')
 
-    max_frames = max(len(seq) for seq in X)
+        print('started encodeing labels...')
+        le = LabelEncoder()
+        y_encoded = le.fit_transform(y)
+        
+        # Convert labels into one-hot-encoded vectors
+        one_hot_encoded_labels = to_categorical(y_encoded)
+        print('finished encodeing labels...')
 
-    print('started encodeing labels...')
-    le = LabelEncoder()
-    y_encoded = le.fit_transform(y)
-    num_classes = len(le.classes_)
-    # Convert labels into one-hot-encoded vectors
-    one_hot_encoded_labels = to_categorical(y_encoded)
-    print('finished encodeing labels...')
+        X_train, X_test, y_train, y_test = train_test_split(X, one_hot_encoded_labels,
+                                                            test_size=0.2, shuffle = True,
+                                                            random_state=SEED)
+        
+        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, one_hot_encoded_labels,
-                                                        test_size=0.2, shuffle = True,
-                                                        random_state=SEED)
-    
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
+        np.save("features_train_pre", X_train)
+        np.save("features_test_pre", X_test)
+        np.save("features_val_pre", X_val)
+        np.save("labels_train_pre", y_train)
+        np.save("labels_test_pre", y_test)
+        np.save("labels_val_pre", y_val)
+    else:
+        X_train = np.load("features_train_pre.npy", allow_pickle=True)
+        X_test = np.load("features_test_pre.npy", allow_pickle=True)
+        X_val = np.load("features_val_pre.npy", allow_pickle=True)
+        y_train = np.load("labels_train_pre.npy")
+        y_test = np.load("labels_test_pre.npy")
+        y_val = np.load("labels_val_pre.npy")
+        print("Loaded cache")
+
+    max_frames = max(len(seq) for seq in np.concatenate((X_train, X_test, X_val), axis=0))
+    num_classes = len(np.unique(np.concatenate((y_train, y_test, y_val), axis=0), axis=0))
 
     # Create data generators
     train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)

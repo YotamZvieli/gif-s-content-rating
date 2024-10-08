@@ -77,7 +77,7 @@ def load_dataset(folder_path):
                 gif_sequences.append(frames)
                 ratings.append(rating_folder_name)
 
-    return gif_sequences, np.array(ratings)
+    return np.array(gif_sequences, dtype='object'), np.array(ratings)
 
 # def pad_sequences_3d(sequences, max_length, padding_value=0):
 #     # Get the shape of the frames
@@ -207,25 +207,23 @@ def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name)
     plt.legend()
 
 if __name__ == '__main__':
-    folder_path = r"C:\Users\yotam\OneDrive - mail.tau.ac.il\Documents\courses\ML\gif-s-content-rating\gifs\DL project - gifs\train"
-
-    load_from_cache = False
-    train_labels = []
-    train_features = []
-    if not load_from_cache:
+    folder_path = r"C:\gif-s-content-rating\gifs\train"
+    
+    if not all(cache_name in os.listdir() for cache_name in ['features_train_64.npy', 
+                                                             'features_test_64.npy', 
+                                                             'features_val_64.npy', 
+                                                             'labels_train_64.npy', 
+                                                             'labels_test_64.npy', 
+                                                             'labels_val_64.npy']):
         print("started loading dataset...")
         X, y = load_dataset(folder_path)
         print("finished loading dataset...")
         print(f'Number of gifs: {len(X)}')
 
-        max_frames = max(len(seq) for seq in X)
-
         print('started encodeing labels...')
         le = LabelEncoder()
         y_encoded = le.fit_transform(y)
-        num_classes = len(le.classes_)
-        y_encoded = np.array(y_encoded)
-        X = np.array(X)
+        
         # Convert labels into one-hot-encoded vectors
         one_hot_encoded_labels = to_categorical(y_encoded)
         print('finished encodeing labels...')
@@ -236,19 +234,20 @@ if __name__ == '__main__':
         
         X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
-        np.save("features_train", X_train)
-        np.save("features_test", X_test)
-        np.save("features_val", X_val)
-        np.save("labels_train", y_train)
-        np.save("labels_test", y_test)
-        np.save("labelss_val", y_val)
+        np.save("features_train_64", X_train)
+        np.save("features_test_64", X_test)
+        np.save("features_val_64", X_val)
+        np.save("labels_train_64", y_train)
+        np.save("labels_test_64", y_test)
+        np.save("labels_val_64", y_val)
     else:
-        X_train = np.load("features_train.npy")
-        X_test = np.load("features_test.npy")
-        X_val = np.load("features_val.npy")
-        y_train = np.load("labels_train.npy")
-        y_test = np.load("labels_test.npy")
-        y_val = np.load("labelss_val.npy")
+        X_train = np.load("features_train_64.npy", allow_pickle=True)
+        X_test = np.load("features_test_64.npy", allow_pickle=True)
+        X_val = np.load("features_val_64.npy", allow_pickle=True)
+        y_train = np.load("labels_train_64.npy")
+        y_test = np.load("labels_test_64.npy")
+        y_val = np.load("labels_val_64.npy")
+        print("Loaded cache")
 
 
     # print("started loading dataset...")
@@ -278,10 +277,13 @@ if __name__ == '__main__':
     
     # X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, shuffle = True, random_state=SEED)
 
+    max_frames = max(len(seq) for seq in np.concatenate((X_train, X_test, X_val), axis=0))
+    num_classes = len(np.unique(np.concatenate((y_train, y_test, y_val), axis=0), axis=0))
+
     # Create data generators
-    train_generator = DataGenerator(X_train, y_train, batch_size=32, max_frames=max_frames)
-    test_generator = DataGenerator(X_test, y_test, batch_size=32, max_frames=max_frames)
-    val_generator = DataGenerator(X_val, y_val, batch_size=32, max_frames=max_frames)
+    train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
+    test_generator = DataGenerator(X_test, y_test, batch_size=8, max_frames=max_frames)
+    val_generator = DataGenerator(X_val, y_val, batch_size=8, max_frames=max_frames)
 
     input_shape = (max_frames, WIDTH, HEIGHT, 3)
 
