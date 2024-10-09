@@ -4,7 +4,7 @@ from PIL import Image
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import matplotlib
-
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -68,14 +68,16 @@ def load_dataset(folder_path):
     gif_sequences = []
     ratings = []
     for rating_folder_name in os.listdir(folder_path):
-        rating_folder_path = os.path.join(folder_path, rating_folder_name)
-        for filename in os.listdir(rating_folder_path):
-            if filename.endswith(".gif"):
-                file_path = os.path.join(rating_folder_path, filename)
-                num_frames_to_extract = frames_for_gif_to_extract(file_path)
-                frames = extract_frames(file_path, num_frames_to_extract)
-                gif_sequences.append(frames)
-                ratings.append(rating_folder_name)
+        print(rating_folder_name)
+        if rating_folder_name in ["r", "g"]:
+            rating_folder_path = os.path.join(folder_path, rating_folder_name)
+            for filename in tqdm(os.listdir(rating_folder_path)):
+                if filename.endswith(".gif"):
+                    file_path = os.path.join(rating_folder_path, filename)
+                    num_frames_to_extract = frames_for_gif_to_extract(file_path)
+                    frames = extract_frames(file_path, num_frames_to_extract)
+                    gif_sequences.append(frames)
+                    ratings.append(rating_folder_name)
 
     return np.array(gif_sequences, dtype='object'), np.array(ratings)
 
@@ -107,20 +109,20 @@ def create_model(input_shape, num_classes, masking):
 
     model.add(Input(shape=input_shape))
 
-    model.add(TimeDistributed(Conv2D(16, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(Conv2D(16, (3, 3), padding='same',activation='relu')))
 
     model.add(TimeDistributed(MaxPooling2D((4, 4))))
-    model.add(TimeDistributed(Dropout(0.25)))
+    #model.add(TimeDistributed(Dropout(0.1)))
 
-    model.add(TimeDistributed(Conv2D(32, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(Conv2D(32, (3, 3), padding='same',activation='relu')))
     model.add(TimeDistributed(MaxPooling2D((4, 4))))
-    model.add(TimeDistributed(Dropout(0.25)))
+    #model.add(TimeDistributed(Dropout(0.1)))
 
-    model.add(TimeDistributed(Conv2D(64, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(Conv2D(64, (3, 3), padding='same',activation='relu')))
     model.add(TimeDistributed(MaxPooling2D((2, 2))))
-    model.add(TimeDistributed(Dropout(0.25)))
+    #model.add(TimeDistributed(Dropout(0.1)))
 
-    model.add(TimeDistributed(Conv2D(64, (3, 3), padding='same',activation = 'relu')))
+    model.add(TimeDistributed(Conv2D(64, (3, 3), padding='same',activation='relu')))
     model.add(TimeDistributed(MaxPooling2D((2, 2))))
     #model.add(TimeDistributed(Dropout(0.25)))
 
@@ -131,7 +133,7 @@ def create_model(input_shape, num_classes, masking):
 
     model.add(LSTM(32))
 
-    model.add(Dense(num_classes, activation = 'softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
 
     ########################################################################################################################
 
@@ -207,7 +209,7 @@ def plot_metric(model_training_history, metric_name_1, metric_name_2, plot_name)
     plt.legend()
 
 if __name__ == '__main__':
-    folder_path = r"C:\gif-s-content-rating\gifs\train"
+    folder_path = r"gifs/DL project - gifs/train"
     
     if not all(cache_name in os.listdir() for cache_name in ['features_train_64.npy', 
                                                              'features_test_64.npy', 
@@ -281,9 +283,9 @@ if __name__ == '__main__':
     num_classes = len(np.unique(np.concatenate((y_train, y_test, y_val), axis=0), axis=0))
 
     # Create data generators
-    train_generator = DataGenerator(X_train, y_train, batch_size=8, max_frames=max_frames)
-    test_generator = DataGenerator(X_test, y_test, batch_size=8, max_frames=max_frames)
-    val_generator = DataGenerator(X_val, y_val, batch_size=8, max_frames=max_frames)
+    train_generator = DataGenerator(X_train, y_train, batch_size=16, max_frames=max_frames)
+    test_generator = DataGenerator(X_test, y_test, batch_size=16, max_frames=max_frames)
+    val_generator = DataGenerator(X_val, y_val, batch_size=16, max_frames=max_frames)
 
     input_shape = (max_frames, WIDTH, HEIGHT, 3)
 

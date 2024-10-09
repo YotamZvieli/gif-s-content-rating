@@ -10,7 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import mixed_precision
 import frames_extractor
-
+from tqdm import tqdm as t
 
 if __name__ == '__main__':
     #process the data
@@ -19,8 +19,8 @@ if __name__ == '__main__':
     classes = ["g", "pg", "pg-13", "r"]
     label_to_num = {"g":0, "pg":1, "pg-13":2, "r":3}
     num_of_frames = 10
-    height = 100
-    width = 100
+    height = 64
+    width = 64
     mixed_precision.set_global_policy('mixed_float16')
     load_from_cache = False
     gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     train_features = []
     if not load_from_cache:
         for c in classes:
-            for gif in glob.glob(os.path.join(train_path + c, "*.gif")):
+            for gif in t(glob.glob(os.path.join(train_path + c, "*.gif"))):
                 frames = frames_extractor.extract_frames(gif, width, height, num_of_frames)
                 train_features.append(frames)
                 train_labels.append(label_to_num[c])
@@ -62,13 +62,13 @@ if __name__ == '__main__':
     model.add(ConvLSTM2D(filters=4, kernel_size=(3, 3), activation='tanh', data_format="channels_last",
                          recurrent_dropout=0.2, return_sequences=True, input_shape=(num_of_frames, height, width, 3)))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Dropout(0.1)))
     model.add(ConvLSTM2D(filters=8, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Dropout(0.1)))
     model.add(ConvLSTM2D(filters=14, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
-    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Dropout(0.1)))
     model.add(ConvLSTM2D(filters=16, kernel_size=(3, 3), activation='tanh', data_format="channels_last", recurrent_dropout=0.2, return_sequences=True))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), padding='same', data_format='channels_last'))
     model.add(Flatten())
