@@ -29,12 +29,12 @@ if __name__ == '__main__':
     print(torch.cuda.get_device_name(0))
     dataset_root_path = "gifs/DL project - gifs"
     dataset_root_path = pathlib.Path(dataset_root_path)
-    video_count_train = len(list(dataset_root_path.glob("train_avi/*/*.gif")))
+    video_count_train = len(list(dataset_root_path.glob("train_avi/*/*.avi")))
 
-    video_file_paths_class_g = list(dataset_root_path.glob("train_avi/g/*.gif"))
-    video_file_paths_class_pg = list(dataset_root_path.glob("train_avi/pg/*.gif"))
-    video_file_paths_class_pg13 = list(dataset_root_path.glob("train_avi/pg-13/*.gif"))
-    video_file_paths_class_r = list(dataset_root_path.glob("train_avi/r/*.gif"))
+    video_file_paths_class_g = list(dataset_root_path.glob("train_avi/g/*.avi"))
+    video_file_paths_class_pg = list(dataset_root_path.glob("train_avi/pg/*.avi"))
+    video_file_paths_class_pg13 = list(dataset_root_path.glob("train_avi/pg-13/*.avi"))
+    video_file_paths_class_r = list(dataset_root_path.glob("train_avi/r/*.avi"))
 
     label_to_id = {"g": 0, "pg": 1, "pg-13": 2, "r": 3}
     id_to_label = {0: "g", 1: "pg", 2: "pg-13", 3: "r"}

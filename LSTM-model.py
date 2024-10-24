@@ -18,9 +18,9 @@ if __name__ == '__main__':
     test_path = "gifs/DL project - gifs/test/"
     classes = ["g", "pg", "pg-13", "r"]
     label_to_num = {"g":0, "pg":1, "pg-13":2, "r":3}
-    num_of_frames = 10
-    height = 64
-    width = 64
+    num_of_frames = 2
+    height = 224
+    width = 224
     mixed_precision.set_global_policy('mixed_float16')
     load_from_cache = False
     gpus = tf.config.experimental.list_physical_devices('GPU')
