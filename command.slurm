@@ -12,4 +12,4 @@
 #SBATCH --cpus-per-task=4 # CPU cores per process
 #SBATCH --gpus=1 # GPUs in total
 
-python awesome.py
+python ~/gif-s-content-rating/Test-pre-trained-model.py
