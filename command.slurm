@@ -11,6 +11,7 @@
 #SBATCH --mem=50000 # CPU memory (MB)
 #SBATCH --cpus-per-task=4 # CPU cores per process
 #SBATCH --gpus=1 # GPUs in total
+#SBATCH --account=yotamzvieli
 
 
 python awesome.py
