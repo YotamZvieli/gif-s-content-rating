@@ -8,7 +8,7 @@
 #SBATCH --signal=USR1@120 # how to end job when time’s up
 #SBATCH --nodes=1 # number of machines
 #SBATCH --ntasks=1 # number of processes
-#SBATCH --mem=70000 # CPU memory (MB)
+#SBATCH --mem=50000 # CPU memory (MB)
 #SBATCH --cpus-per-task=4 # CPU cores per process
 #SBATCH --gpus=2 # GPUs in total
 
