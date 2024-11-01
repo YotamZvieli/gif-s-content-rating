@@ -4,7 +4,7 @@
 #SBATCH --output=/home/ai_center/ai_users/guy/.yotamZ/pre_trained.out # redirect stdout
 #SBATCH --error=/home/ai_center/ai_users/guy/.yotamZ/pre_trained.err # redirect stderr
 #SBATCH --partition=studentkillable
-#SBATCH --time=60 # max time (minutes)
+#SBATCH --time=200 # max time (minutes)
 #SBATCH --signal=USR1@120 # how to end job when time’s up
 #SBATCH --nodes=1 # number of machines
 #SBATCH --ntasks=1 # number of processes
