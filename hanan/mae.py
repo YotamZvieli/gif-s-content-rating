@@ -147,7 +147,7 @@ if __name__ == '__main__':
     #     if "encoder.layer.11" not in name and "encoder.layer.12" not in name and "classifier" not in name:
     #         param.requires_grad = False
 
-    datasets_root_path = '/content/drive/MyDrive/DL project - gifs/learning'
+    datasets_root_path = '/home/ai_center/ai_data/ruth_test/.hanan/learning'
     datasets_root_path = pathlib.Path(datasets_root_path)
     train_dataset, val_dataset, test_dataset = preparing_datasets(datasets_root_path, image_processor,
                                                                   model.config.num_frames, 4, 30)
