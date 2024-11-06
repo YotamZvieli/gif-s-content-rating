@@ -122,7 +122,7 @@ if __name__ == '__main__':
     id2label = {v: k for k, v in label2id.items()}
 
     model_ckpt = "MCG-NJU/videomae-base-finetuned-kinetics" # pre-trained model from which to fine-tune
-    batch_size = 32 # batch size for training and evaluation
+    batch_size = 16 # batch size for training and evaluation
 
     image_processor = VideoMAEImageProcessor.from_pretrained(model_ckpt)
     model = VideoMAEForVideoClassification.from_pretrained(
