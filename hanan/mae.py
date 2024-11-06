@@ -15,7 +15,7 @@ from pytorchvideo.transforms import (
     ShortSideScale,
     UniformTemporalSubsample,
 )
-from .labeled_gif_dataset import LabeledGIFDataset
+from labeled_gif_dataset import LabeledGIFDataset
 import evaluate
 import torch
 import numpy as np

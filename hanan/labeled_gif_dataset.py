@@ -1,6 +1,6 @@
 from pytorchvideo.data import LabeledVideoDataset
 from pytorchvideo.data.utils import MultiProcessSampler
-from .encoded_gif import EncodedGif
+from encoded_gif import EncodedGif
 import os
 import logging
 import pathlib
