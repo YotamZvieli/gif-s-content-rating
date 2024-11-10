@@ -10,8 +10,8 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.utils import Sequence
 
-HEIGHT = 64
-WIDTH = 64
+HEIGHT = 224
+WIDTH = 224
 SEED = 42
 BATCH_SIZE = 128
 EPOCHS = 50
@@ -136,7 +136,7 @@ def build_model(max_frames, img_height, img_width, num_classes):
 
 def corn_loss(y_true, y_pred):
     # Convert ordinal labels to binary tasks
-    y_true_binary = tf.cast(tf.greater_equal(tf.expand_dims(y_true, -1), 
+    y_true_binary = tf.cast(tf.greater_equal(tf.cast(tf.expand_dims(y_true, -1), tf.float32), 
                                              tf.cast(tf.range(y_pred.shape[-1]), 
                                                      tf.float32)), tf.float32)
     
@@ -189,7 +189,7 @@ def plot_training_history(history):
     plt.show()
 
 if __name__ == '__main__':
-    folder_path = r"gifs/DL project - gifs/train"
+    folder_path = r"gifs/train"
 
     X, y = load_dataset(folder_path)
 

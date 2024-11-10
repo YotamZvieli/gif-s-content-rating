@@ -143,11 +143,11 @@ if __name__ == '__main__':
     model.config.num_hidden_layers += 1
     model.config.num_attention_heads += 1
 
-    # for name, param in model.named_parameters():
-    #     if "encoder.layer.11" not in name and "encoder.layer.12" not in name and "classifier" not in name:
-    #         param.requires_grad = False
+    for name, param in model.named_parameters():
+        if "encoder.layer.11" not in name and "encoder.layer.12" not in name and "classifier" not in name:
+            param.requires_grad = False
 
-    datasets_root_path = '/home/ai_center/ai_data/ruth_test/.hanan/learning'
+    datasets_root_path = r'G:\My Drive\DL project - gifs\learning'
     datasets_root_path = pathlib.Path(datasets_root_path)
     train_dataset, val_dataset, test_dataset = preparing_datasets(datasets_root_path, image_processor,
                                                                   model.config.num_frames, 4, 30)

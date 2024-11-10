@@ -8,7 +8,7 @@ API_KEY = 'ZobQmFXUCpag6irj5kw9ib6Tk89sGlF1'
 BASE_URL = 'https://api.giphy.com/v1/gifs/'
 LIMIT = 50
 MAX_ATTEMPTS = 10
-RATING_LIST = ['g', 'pg', 'pg-13', 'r']
+RATING_LIST = ['r'] #['g', 'pg', 'pg-13', 'r']
 BULK_LIMIT = 500
 REQUEST_LIMIT = 100
 TIME_TO_SLEEP = 3660
@@ -105,7 +105,7 @@ def download_query(rating, category, request_count, num_to_download):
 
 if __name__ == '__main__':
     categories = get_categories()
-    request_count = 2 # Need to change to 1
+    request_count = 1 # Need to change to 1
     for rating in RATING_LIST:
         downloaded_gifs_num = 0
         print(f"Downloading trending gifs for {rating}")
