@@ -119,7 +119,7 @@ function App() {
 
         {rating && (
             <Alert severity="success" style={{ textAlign: 'center' }}>
-              The GIF rating is: {rating} / 10
+              The GIF rating is: {rating}
             </Alert>
         )}
       </Container>

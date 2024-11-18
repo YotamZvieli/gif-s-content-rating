@@ -37,7 +37,11 @@ def process_gif(file_path):
     model = tf.keras.models.load_model('../../convlstm_model___Date_Time_2024_10_02__12_28_57___Loss_0.9139771461486816___Accuracy_0.6860841512680054.h5')
     predicted = model.predict(frames)
     print(predicted)
-    return list(predicted[0]).index(max(predicted[0])) + 1
+    rate = list(predicted[0]).index(max(predicted[0])) + 1
+    if rate == 0:
+        return 'Appropriate'
+    else:
+        return 'Inappropriate'
 
 
 @app.route('/rate-gif', methods=['POST'])
