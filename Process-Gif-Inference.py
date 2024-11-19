@@ -100,37 +100,37 @@ class ImprovedVideoClassifier(nn.Module):
         x = x.view(x.size(0), -1)  # Flatten input
         return self.network(x)
 
-# Load the trained classifier
-model_checkpoint_path = '/content/drive/MyDrive/data/learning_3/model_checkpoint.pt'
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def process_gif(gif_path):
+    # Load the trained classifier
+    model_checkpoint_path = '/content/drive/MyDrive/data/learning_3/model_checkpoint.pt'
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Ensure the architecture matches the one used during training
-classifier = ImprovedVideoClassifier(
-    input_dim=30 * 512,  # Match input dimensions from training
-    hidden_dim=1024,     # Match hidden dimensions
-    output_dim=2,        # Match output classes
-    num_layers=10,       # Match number of layers
-    dropout_prob=0.5     # Match dropout
-)
-classifier.load_state_dict(torch.load(model_checkpoint_path, map_location=device))
-classifier = classifier.to(device)
-classifier.eval()
+    # Ensure the architecture matches the one used during training
+    classifier = ImprovedVideoClassifier(
+        input_dim=30 * 512,  # Match input dimensions from training
+        hidden_dim=1024,  # Match hidden dimensions
+        output_dim=2,  # Match output classes
+        num_layers=10,  # Match number of layers
+        dropout_prob=0.5  # Match dropout
+    )
+    classifier.load_state_dict(torch.load(model_checkpoint_path, map_location=device))
+    classifier = classifier.to(device)
+    classifier.eval()
 
-# Process the GIF to extract embeddings
-gif_path = '/content/drive/MyDrive/data/learning_3/validation/pg-13+r/animation dance GIF by tverd.gif'
-model, _, preprocess = open_clip.create_model_and_transforms('ViT-B-16', pretrained='laion2b_s34b_b88k')
-model.to(device)
+    # Process the GIF to extract embeddings
+    model, _, preprocess = open_clip.create_model_and_transforms('ViT-B-16', pretrained='laion2b_s34b_b88k')
+    model.to(device)
 
-embeddings = process_gif_to_embeddings(gif_path, model, preprocess, device=device, num_frames=30)
+    embeddings = process_gif_to_embeddings(gif_path, model, preprocess, device=device, num_frames=30)
 
-# Feed embeddings into the classifier
-if embeddings is not None:
-    embeddings = embeddings.unsqueeze(0).to(device)  # Add batch dimension
-    with torch.no_grad():
-        output = classifier(embeddings)
-        _, predicted_class = torch.max(output, 1)
+    # Feed embeddings into the classifier
+    if embeddings is not None:
+        embeddings = embeddings.unsqueeze(0).to(device)  # Add batch dimension
+        with torch.no_grad():
+            output = classifier(embeddings)
+            _, predicted_class = torch.max(output, 1)
 
-    print("Model Output (Raw Scores):", output)
-    print("Predicted Class:", predicted_class.item())
-else:
-    print("Failed to process GIF.")
+        print("Model Output (Raw Scores):", output)
+        print("Predicted Class:", predicted_class.item())
+    else:
+        print("Failed to process GIF.")
