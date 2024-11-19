@@ -1,13 +1,11 @@
-import random
-
 import numpy as np
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 import tensorflow as tf
 from flask_cors import CORS
-
 import frames_extractor
+from processor import process_gif
 
 app = Flask(__name__)
 CORS(app)
@@ -31,13 +29,8 @@ def allowed_file(filename):
 
 
 # Function to process the GIF and return a rating
-def process_gif(file_path):
-    frames = frames_extractor.extract_frames(file_path, width, height, num_of_frames)
-    frames = np.array(frames).reshape(-1, num_of_frames, height, width, 3)
-    model = tf.keras.models.load_model('../../convlstm_model___Date_Time_2024_10_02__12_28_57___Loss_0.9139771461486816___Accuracy_0.6860841512680054.h5')
-    predicted = model.predict(frames)
-    print(predicted)
-    rate = list(predicted[0]).index(max(predicted[0])) + 1
+def process_gif(gif_path):
+    rate = process_gif(gif_path)
     if rate == 0:
         return 'Appropriate'
     else:

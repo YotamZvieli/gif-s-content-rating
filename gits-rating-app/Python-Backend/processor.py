@@ -1,11 +1,8 @@
-import os
-from glob import glob
 import torch.nn as nn
 import torch
 from PIL import Image
 import imageio
 import random
-from torchvision import transforms
 import open_clip
 
 def process_gif_to_embeddings(gif_path, model, preprocess, device='cuda', num_frames=30):
@@ -102,7 +99,7 @@ class ImprovedVideoClassifier(nn.Module):
 
 def process_gif(gif_path):
     # Load the trained classifier
-    model_checkpoint_path = '/content/drive/MyDrive/data/learning_3/model_checkpoint.pt'
+    model_checkpoint_path = 'gits-rating-app/Python-Backend/model_checkpoint.pt'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Ensure the architecture matches the one used during training
