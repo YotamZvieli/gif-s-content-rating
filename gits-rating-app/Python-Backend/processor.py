@@ -99,7 +99,7 @@ class ImprovedVideoClassifier(nn.Module):
 
 def process_gif(gif_path):
     # Load the trained classifier
-    model_checkpoint_path = 'gits-rating-app/Python-Backend/model_checkpoint.pt'
+    model_checkpoint_path = 'model_checkpoint.pt'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Ensure the architecture matches the one used during training
@@ -129,5 +129,6 @@ def process_gif(gif_path):
 
         print("Model Output (Raw Scores):", output)
         print("Predicted Class:", predicted_class.item())
+        return predicted_class.item()
     else:
         print("Failed to process GIF.")

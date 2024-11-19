@@ -28,15 +28,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Function to process the GIF and return a rating
-def process_gif(gif_path):
-    rate = process_gif(gif_path)
-    if rate == 0:
-        return 'Appropriate'
-    else:
-        return 'Inappropriate'
-
-
 @app.route('/rate-gif', methods=['POST'])
 def upload_file():
     # Check if a file is part of the request
@@ -50,10 +41,11 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-
-        # Process the GIF and get the rating
-        rating = process_gif(file_path)
-        return jsonify(rating=rating)
+        rate = process_gif(file_path)
+        if rate == 0:
+            return jsonify(rating='Appropriate')
+        else:
+            return jsonify(rating='Inappropriate')
 
     return jsonify(error='Only GIF files are allowed!'), 400
 
