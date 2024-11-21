@@ -1,10 +1,9 @@
-import numpy as np
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
 import os
-import tensorflow as tf
+
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-import frames_extractor
+from werkzeug.utils import secure_filename
+
 from processor import process_gif
 
 app = Flask(__name__)
