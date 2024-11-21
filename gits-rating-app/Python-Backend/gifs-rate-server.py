@@ -35,7 +35,6 @@ def upload_file():
 
     file = request.files['gif']
 
-    # If the file is not a valid GIF
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
