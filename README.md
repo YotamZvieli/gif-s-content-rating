@@ -1,6 +1,8 @@
 #Gifs content rating project
 ##Application
 ###Install & Run tha app:
+- Requirements: Node, Python
+- Execute the following from the terminal within the relevant directory.
 - From `gits-rating-app/frontend` run:
 ```shell
 npm install
