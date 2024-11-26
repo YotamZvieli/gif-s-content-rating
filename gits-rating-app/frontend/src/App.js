@@ -119,7 +119,7 @@ function App() {
 
     try {
       setLoading(true);
-      const response = await axios.post('https://shaggy-maps-pay.loca.lt/rate-gif', formData, {
+      const response = await axios.post('https://eager-papayas-wait.loca.lt', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'bypass-tunnel-reminder': '1',
