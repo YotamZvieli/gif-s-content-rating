@@ -1,19 +1,13 @@
 #Gifs content rating project
 ##Application
-###Install & Run tha app:
-- Requirements: Node, Python
-- Execute the following from the terminal within the relevant directory.
-- From `gits-rating-app/frontend` run:
-```shell
-npm install
-npm start
-```
-- From ```gits-rating-app/Python-Backend``` run:
-```shell
-pip install open_clip_torch
-pip install numpy
-python gifs-rate-server.py
-```
- Open the app on [App](http://localhost:3000)
+We host the application on our local computer using tunnel to serve the traffic.
+The app is available on URL: https://fancy-women-float.loca.lt/
+Password: 147.235.200.143
+
+##Debug:
+If after multiple retries for some reason it's not available: 
+1. Please send a mail to - yotamzvieli@mail.tau.ac.il
+2. You can  run gif inference using our lat and most successful checkpoint.
+
 
 
