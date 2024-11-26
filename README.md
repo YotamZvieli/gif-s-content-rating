@@ -1,13 +1,6 @@
 #Gifs content rating project
 ##Application
-We host the application on our local computer using tunnel to serve the traffic.
-The app is available on URL: https://eager-papayas-wait.loca.lt/
-Password: 147.235.200.143
-
-##Debug:
-If after multiple retries for some reason it's not available: 
-1. Please send a mail to - yotamzvieli@mail.tau.ac.il
-2. You can  run gif inference using our lat and most successful checkpoint.
-
-
-
+To run the application you need:
+1. download the model checkpoint from drive - [model](https://drive.google.com/file/d/1q33h-A54cBKFvVaC3aFiVoIKs1NRwx2l/view?usp=drive_link)
+2. run the script file:  installations.sh from cmd.
+3. Open add on [app](http://localhost:5000/)
