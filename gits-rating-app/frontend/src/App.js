@@ -119,9 +119,10 @@ function App() {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:5000/rate-gif', formData, {
+      const response = await axios.post('https://shaggy-maps-pay.loca.lt/rate-gif', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'bypass-tunnel-reminder': '1',
         },
       });
       setRating(response.data.rating); // Expecting response with rating like "appropriate" or "inappropriate"
