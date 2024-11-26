@@ -1,14 +1,12 @@
 import os
-
 from flask import Flask, request, jsonify
+from flask import send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-
 from processor import process_gif
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static/react')
 CORS(app)
-
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -20,11 +18,17 @@ width = 128
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-
-# Function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route('/rate-gif', methods=['POST'])
@@ -47,6 +51,5 @@ def upload_file():
 
     return jsonify(error='Only GIF files are allowed!'), 400
 
-
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
