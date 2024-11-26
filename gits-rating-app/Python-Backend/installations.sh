@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Install required Python packages
 pip install torch
 pip install pillow
 pip install numpy
 pip install open_clip_torch
+pip install flask
+pip install flask-cors
+pip install imageio
 
-# Notify the user
 echo "Running...."
 
-# Run the Python script
 python gifs-rate-server.py
