@@ -1,7 +1,7 @@
 #Gifs content rating project
 ##Application
 We host the application on our local computer using tunnel to serve the traffic.
-The app is available on URL: https://fancy-women-float.loca.lt/
+The app is available on URL: https://eager-papayas-wait.loca.lt/
 Password: 147.235.200.143
 
 ##Debug:
